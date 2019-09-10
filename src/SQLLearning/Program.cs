@@ -1,5 +1,6 @@
 ﻿using SQLLearning.Data;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,17 +11,13 @@ namespace SQLLearning
     {
         static void Main(string[] args)
         {
-            string connectionString =
-                "Data Source=HFSQL01;Initial Catalog=AdventureWorks2017;"
-                + "Integrated Security=true";
-
             string queryString =
                 "SELECT * from HumanResources.Department";
 
             string paramQueryString =
                 "SELECT * from Person.Person WHERE LastName LIKE @LastNameLike + '%'";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HFSQL01"].ConnectionString))
             {
                 var cdl = new ConnectedDataLayer(connection);
                 var ddl = new DisconnectedDataLayer(connection);
