@@ -17,6 +17,9 @@ namespace SQLLearning
             string queryString =
                 "SELECT * from HumanResources.Department";
 
+            string paramQueryString =
+                "SELECT * from Person.Person WHERE LastName LIKE @LastNameLike + '%'";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 var cdl = new ConnectedDataLayer(connection);
@@ -24,6 +27,14 @@ namespace SQLLearning
 
                 string tableName = "Departments";
                 var data = ddl.QueryData(queryString, tableName);
+
+                var param = new SqlParameter()
+                {
+                    ParameterName = "@LastNameLike",
+                    Value = "Hernan"
+                };
+
+                var personData = ddl.QueryData(paramQueryString, param, "Persons");
 
                 #region Adding Row to Table
                 var table = data.Tables[tableName];

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace SQLLearning.Data
 {
@@ -14,7 +15,6 @@ namespace SQLLearning.Data
         {
             this.connection = connection;
         }
-
         public DataSet QueryData(string queryString, string tableName)
         {
             dataAdapter = new SqlDataAdapter(queryString, connection);
@@ -22,6 +22,25 @@ namespace SQLLearning.Data
 
             DataSet dt = new DataSet();
             dataAdapter.Fill(dt, tableName);
+
+            return dt;
+        }
+
+        public DataSet QueryData(string queryString, SqlParameter parameter, string tableName)
+        {
+
+            var cmd = new SqlCommand(queryString, connection);
+            if(parameter != null)
+            {
+                cmd.Parameters.Add(parameter);
+            }
+
+            dataAdapter = new SqlDataAdapter(cmd);
+            commandBuilder = new SqlCommandBuilder(dataAdapter);
+
+            DataSet dt = new DataSet();
+            dataAdapter.Fill(dt, tableName);
+
             return dt;
         }
 
