@@ -530,11 +530,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\SQLLearning\\SQLLearning.csproj",
+      "projectUniqueName": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\src\\SQLLearning\\SQLLearning.csproj",
       "projectName": "SQLLearning",
-      "projectPath": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\SQLLearning\\SQLLearning.csproj",
+      "projectPath": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\src\\SQLLearning\\SQLLearning.csproj",
       "packagesPath": "C:\\Users\\shernandez\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\SQLLearning\\obj\\",
+      "outputPath": "C:\\Users\\shernandez\\source\\repos\\SQLLearning\\src\\SQLLearning\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
