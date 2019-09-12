@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,32 +18,38 @@ namespace SQLLearning.Data
 
         public void QueryDataAsync(string queryString)
         {
-            SqlDataReader rdr = null;
-            try
-            {
-                SqlCommand cmd = new SqlCommand(queryString, connection);
-                rdr = cmd.ExecuteReader();
+            SqlCommand cmd = new SqlCommand(queryString, connection);
+            List<Department> departments = new List<Department>();
 
-                while (rdr.Read())
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                try
                 {
-                    for (int i = 0; i < rdr.FieldCount; i++)
+                    while (rdr.Read())
                     {
-                        Console.Write($"{rdr[i]}, ");
+                        departments.Add(new Department()
+                        {
+                            DepartmentID = rdr.GetInt16(rdr.GetOrdinal("DepartmentID")),
+                            GroupName = rdr.GetString(rdr.GetOrdinal("GroupName")),
+                            Name = rdr.GetString(rdr.GetOrdinal("Name")),
+                            ModifiedDate = rdr.GetDateTime(rdr.GetOrdinal("ModifiedDate"))
+                        });
                     }
-                    Console.WriteLine();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (rdr != null)
+                catch (Exception ex)
                 {
-                    rdr.Close();
+                    Console.WriteLine(ex.Message);
                 }
-                Console.WriteLine("----------------------------------------------");
+                finally
+                {
+                    departments = departments.OrderBy(d => d.DepartmentID).ToList();
+
+                    foreach(var department in departments)
+                    {
+                        Console.WriteLine(department.ToString());
+                    }
+                    Console.WriteLine("=======================================================");
+                } 
             }
         }
         public void InsertData(string insertString)
