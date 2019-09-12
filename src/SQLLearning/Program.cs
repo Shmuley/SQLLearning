@@ -19,82 +19,106 @@ namespace SQLLearning
 
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HFSQL01"].ConnectionString))
             {
+                using (SqlDataAdapter dataAdapter = new SqlDataAdapter())
+                {
+                    ConnectedDataLayer(connection, queryString);
+                    //DisconnectedDataLayer(connection, dataAdapter, queryString);
+                    //DisconnectedDataLayerWithParameters(connection, dataAdapter, paramQueryString);
+                }
+            }
+        }
+
+        static void ConnectedDataLayer(SqlConnection connection, string queryString)
+        {
+            try
+            {
                 var cdl = new ConnectedDataLayer(connection);
-                var ddl = new DisconnectedDataLayer(connection);
 
-                string tableName = "Departments";
-                var data = ddl.QueryData(queryString, tableName);
+                string insertString = "" +
+                    "insert into HumanResources.Department " +
+                    "(Name, GroupName, ModifiedDate) " +
+                    $"values ('Operations' , 'Information Technology' , '{DateTime.Now}')";
 
-                var param = new SqlParameter()
-                {
-                    ParameterName = "@LastNameLike",
-                    Value = "Hernan"
-                };
+                string updateString = "" +
+                    "update HumanResources.Department " +
+                    "set GroupName = 'IT' " +
+                    "where GroupName = 'Information Technology'";
 
-                var personData = ddl.QueryData(paramQueryString, param, "Persons");
+                string delString =
+                    "delete from HumanResources.Department " +
+                    "where Name = 'Operations'";
 
-                #region Adding Row to Table
-                var table = data.Tables[tableName];
-                var newRow = table.NewRow();
+                string getCountString =
+                    "select count(*) " +
+                    "from HumanResources.Department";
 
-                newRow["Name"] = "Operations";
-                newRow["GroupName"] = "IT";
-                newRow["ModifiedDate"] = DateTime.Now;
-                table.Rows.Add(newRow);
-                #endregion
+                connection.Open();
+                cdl.QueryDataAsync(queryString);
+                cdl.InsertData(insertString);
+                cdl.QueryDataAsync(queryString);
+                cdl.UpdateData(updateString);
+                cdl.QueryDataAsync(queryString);
+                cdl.DeleteData(delString);
+                cdl.QueryDataAsync(queryString);
+                cdl.GetSingleValueData(getCountString);
 
-                try
-                {
-                    data = ddl.InsertData(data, tableName);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        static void DisconnectedDataLayer(SqlConnection connection, SqlDataAdapter dataAdapter, string queryString)
+        {
+            var ddl = new DisconnectedDataLayer(connection, dataAdapter);
 
-                #region Getting Row to Delete
-                var rowsToDelete = data.Tables[tableName]
-                    .AsEnumerable()
-                    .Where(r => r.Field<string>("GroupName") == "IT")
-                    .ToList();
-                #endregion
+            string tableName = "Departments";
+            var data = ddl.QueryData(queryString, tableName);
 
-                var deletedData = ddl.DeleteData(data, rowsToDelete, tableName);
+            #region Adding Row to Table
+            var table = data.Tables[tableName];
+            var newRow = table.NewRow();
 
-                #region Connected Layer
-                //try
-                //{
-                //    string insertString = "" +
-                //        "insert into HumanResources.Department " +
-                //        "(Name, GroupName, ModifiedDate) " +
-                //        "values ('Operations' , 'Information Technology' , '{DateTime.Now}')";
+            newRow["Name"] = "Operations";
+            newRow["GroupName"] = "IT";
+            newRow["ModifiedDate"] = DateTime.Now;
+            table.Rows.Add(newRow);
+            #endregion
 
-                //    string updateString = "" +
-                //        "update HumanResources.Department " +
-                //        "set GroupName = 'IT' " +
-                //        "where GroupName = 'Information Technology'";
+            try
+            {
+                ddl.InsertData(data, tableName);
+                data = ddl.QueryData(queryString, tableName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-                //    string delString =
-                //        "delete from HumanResources.Department " +
-                //        "where Name = 'Operations'";
+            #region Getting Row to Delete
+            var rowsToDelete = data.Tables[tableName]
+                .AsEnumerable()
+                .Where(r => r.Field<string>("GroupName") == "IT")
+                .ToList();
+            #endregion
 
-                //    string getCountString =
-                //        "select count(*) " +
-                //        "from HumanResources.Department";
+            var deletedData = ddl.DeleteData(data, rowsToDelete, tableName);
+        }
+        static void DisconnectedDataLayerWithParameters(SqlConnection connection, SqlDataAdapter dataAdapter, string paramQueryString)
+        {
+            var tableName = "Persons";
+            var ddl = new DisconnectedDataLayer(connection, dataAdapter);
+            var param = new SqlParameter()
+            {
+                ParameterName = "@LastNameLike",
+                Value = "Hernan"
+            };
 
-                //    connection.Open();
-                //    cdl.QueryDataAsync(queryString);
-                //    cdl.InsertData(insertString);
-                //    cdl.UpdateData(updateString);
-                //    cdl.DeleteData(delString);
-                //    cdl.GetSingleValueData(getCountString);
+            var personData = ddl.QueryData(paramQueryString, param, tableName);
 
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.Message);
-                //}
-                #endregion
+            foreach (DataRow row in personData.Tables[tableName].AsEnumerable())
+            {
+                Console.WriteLine($"{row.Field<string>("FirstName")} {row.Field<string>("LastName")}");
             }
         }
     }

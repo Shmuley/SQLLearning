@@ -10,5 +10,10 @@ namespace SQLLearning
         public string Name { get; set; }
         public string GroupName { get; set; }
         public DateTime ModifiedDate { get; set; }
+
+        public override string ToString()
+        {
+            return $"Department ID: {DepartmentID.ToString()} Name: {Name}, Group Name: {GroupName}, Last Modified: {ModifiedDate.ToString()}";
+        }
     }
 }

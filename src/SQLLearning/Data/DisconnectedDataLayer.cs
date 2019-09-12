@@ -11,9 +11,10 @@ namespace SQLLearning.Data
         private SqlDataAdapter dataAdapter;
         private SqlCommandBuilder commandBuilder;
 
-        public DisconnectedDataLayer(SqlConnection connection)
+        public DisconnectedDataLayer(SqlConnection connection, SqlDataAdapter dataAdapter)
         {
             this.connection = connection;
+            this.dataAdapter = dataAdapter;
         }
         public DataSet QueryData(string queryString, string tableName)
         {
@@ -46,6 +47,7 @@ namespace SQLLearning.Data
 
         public DataSet InsertData(DataSet dataSet, string tableName)
         {
+            var insertCommand = commandBuilder.GetInsertCommand();
             dataAdapter.Update(dataSet, tableName);
             return dataSet;
         }
