@@ -20,6 +20,7 @@ namespace SQLLearning.Data
         {
             SqlCommand cmd = new SqlCommand(queryString, connection);
             List<Department> departments = new List<Department>();
+            List<Employee> employees = new List<Employee>();
 
             using (SqlDataReader rdr = cmd.ExecuteReader())
             {
@@ -29,10 +30,34 @@ namespace SQLLearning.Data
                     {
                         departments.Add(new Department()
                         {
-                            DepartmentID = rdr.GetInt16(rdr.GetOrdinal("DepartmentID")),
-                            GroupName = rdr.GetString(rdr.GetOrdinal("GroupName")),
-                            Name = rdr.GetString(rdr.GetOrdinal("Name")),
-                            ModifiedDate = rdr.GetDateTime(rdr.GetOrdinal("ModifiedDate"))
+                            DepartmentID = rdr.GetFieldValue<short>("DepartmentID"),
+                            GroupName = rdr.GetFieldValue<string>("GroupName"),
+                            Name = rdr.GetFieldValue<string>("Name"),
+                            ModifiedDate = rdr.GetFieldValue<DateTime>("ModifiedDate")
+                        });
+                    }
+
+                    rdr.NextResult();
+
+                    while (rdr.Read())
+                    {
+                        employees.Add(new Employee()
+                        {
+                            BusinessEntityID = rdr.GetFieldValue<int>("BusinessEntityID"),
+                            BirthDate = rdr.GetFieldValue<DateTime>("BirthDate"),
+                            CurrentFlag = rdr.GetFieldValue<bool>("CurrentFlag"),
+                            Gender = rdr.GetFieldValue<string>("Gender"),
+                            HireDate = rdr.GetFieldValue<DateTime>("HireDate"),
+                            JobTitle = rdr.GetFieldValue<string>("JobTitle"),
+                            LoginID = rdr.GetFieldValue<string>("LoginID"),
+                            MaritalStatus = rdr.GetFieldValue<string>("MaritalStatus"),
+                            ModifiedDate = rdr.GetFieldValue<DateTime>("ModifiedDate"),
+                            NationalIDNumber = rdr.GetFieldValue<string>("NationalIDNumber"),
+                            OrganizationLevel = rdr.GetFieldValue<short?>("OrganizationLevel"),
+                            rowguid = rdr.GetFieldValue<Guid>("rowguid"),
+                            SalariedFlag = rdr.GetFieldValue<bool>("SalariedFlag"),
+                            SickLeaveHours = rdr.GetFieldValue<short>("SickLeaveHours"),
+                            VacationHours = rdr.GetFieldValue<short>("VacationHours")
                         });
                     }
                 }
@@ -49,6 +74,14 @@ namespace SQLLearning.Data
                         Console.WriteLine(department.ToString());
                     }
                     Console.WriteLine("=======================================================");
+
+                    employees = employees.OrderBy(e => e.BusinessEntityID).ToList();
+
+                    foreach (var emp in employees)
+                    {
+                        Console.WriteLine(emp.ToString());
+                    }
+
                 } 
             }
         }
@@ -101,6 +134,5 @@ namespace SQLLearning.Data
                 Console.WriteLine(ex.Message);
             }
         }
-
     }
 }

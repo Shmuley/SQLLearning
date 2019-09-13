@@ -18,13 +18,7 @@ namespace SQLLearning.Data
         }
         public DataSet QueryData(string queryString, string tableName)
         {
-            dataAdapter = new SqlDataAdapter(queryString, connection);
-            commandBuilder = new SqlCommandBuilder(dataAdapter);
-
-            DataSet dt = new DataSet();
-            dataAdapter.Fill(dt, tableName);
-
-            return dt;
+            return QueryData(queryString, null, tableName);
         }
 
         public DataSet QueryData(string queryString, SqlParameter parameter, string tableName)
@@ -47,7 +41,6 @@ namespace SQLLearning.Data
 
         public DataSet InsertData(DataSet dataSet, string tableName)
         {
-            var insertCommand = commandBuilder.GetInsertCommand();
             dataAdapter.Update(dataSet, tableName);
             return dataSet;
         }

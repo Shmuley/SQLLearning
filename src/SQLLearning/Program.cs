@@ -12,7 +12,8 @@ namespace SQLLearning
         static void Main(string[] args)
         {
             string queryString =
-                "SELECT * from HumanResources.Department";
+                "SELECT * from HumanResources.Department;" +
+                "SELECT * from HumanResources.Employee;";
 
             string paramQueryString =
                 "SELECT * from Person.Person WHERE LastName LIKE @LastNameLike + '%'";
@@ -63,7 +64,7 @@ namespace SQLLearning
                 cdl.GetSingleValueData(getCountString);
 
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
                 Console.WriteLine(ex.Message);
             }
