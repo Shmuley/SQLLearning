@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
+using Microsoft.Data.SqlClient;
 
 namespace SQLLearning.Data
 {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
+using Microsoft.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SQLLearning.Data
 {
@@ -19,8 +18,8 @@ namespace SQLLearning.Data
         public void QueryDataAsync(string queryString)
         {
             SqlCommand cmd = new SqlCommand(queryString, connection);
-            List<Department> departments = new List<Department>();
-            List<Employee> employees = new List<Employee>();
+            List<Department> departments = [];
+            List<Employee> employees = [];
 
             using (SqlDataReader rdr = cmd.ExecuteReader())
             {

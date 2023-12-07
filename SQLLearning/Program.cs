@@ -1,9 +1,9 @@
 ﻿using SQLLearning.Data;
 using System;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Configuration;
 
 namespace SQLLearning
 {
@@ -18,7 +18,7 @@ namespace SQLLearning
             string paramQueryString =
                 "SELECT * from Person.Person WHERE LastName LIKE @LastNameLike + '%'";
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HFSQL01"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["db"].ConnectionString))
             {
                 using (SqlDataAdapter dataAdapter = new SqlDataAdapter())
                 {
